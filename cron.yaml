@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: updater-job
+  namespace: cloudflare-dns-updater
+spec:
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: main-container
+            image: oznu/cloudflare-ddns:latest
+            env:
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: apikey
+                  key: token
+                  optional: false
+            - name: ZONE
+              value: catholicon.uk
+            - name: PROXIED
+              value: "false"
+            imagePullPolicy: Always
+          restartPolicy: Never
