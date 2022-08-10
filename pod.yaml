@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: updater
+  namespace: cloudflare-dns-updater
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: updater
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: updater
+        version: v1
+    spec:
+      containers:
+        - name: updater
+          image: oznu/cloudflare-ddns:latest
+          env:
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: apikey
+                  key: token
+                  optional: false
+            - name: ZONE
+              value: catholicon.uk
+            - name: PROXIED
+              value: "false"
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "75Mi"
+              cpu: 250m
+            requests:
+              memory: "50Mi"
+              cpu: 100m

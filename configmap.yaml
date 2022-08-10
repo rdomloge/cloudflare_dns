@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflare-props
+  namespace: cloudflare-dns-updater
+data:
+  ddclient.conf: |-
+    #How offten to check ip address
+    daemon=300
+
+    #Using Cloudflare protocol
+    protocol=Cloudflare
+
+    #Tell ddclient to get real ip address
+    use=web, web=https://ipinfo.io/ip
+
+    #Credentials for Cloudflare api
+    ssl=yes
+    server=api.cloudflare.com/client/v4
+    login=rdomloge@gmail.com
+    password=[insert CF token here]
+    zone=catholicon.uk
+    syslog=yes
+
+    #Domain for update
+    catholicon.uk
